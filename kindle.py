@@ -4,66 +4,76 @@ from PIL import Image
 
 arr_fname = []
 arr_fobj =[]
-arr_newfname = []
 
 root = "C:\\Users\\fanwe\\Desktop\\images\\"
 for rt, dirs, files in os.walk(root):
-    for f in files:
-        # 获取图片的name和格式
-        fname, fobj = os.path.splitext(f)
-        # 将name和属性添加到list
-        arr_fname.append(fname)
-        arr_fobj.append(fobj)
-    for i in arr_fname:
-        # 文件名到第截多长（根据最短的name计算）
-        arr_newfname.append(i[0:20])
-    for j in arr_newfname:
-        # 查找名字相同的图片进行拼接
-        num = arr_newfname.index(j)
-        if num < (len(arr_newfname) - 1):
-            if j is arr_newfname[num+1]:
-                # 打开name相同的图片，将小的图片拼接到大的图片的下面
-                img1 = Image.open("".join(rt) + "".join(dirs) + arr_fname[num]+arr_fobj[num])
-                img2 = Image.open("".join(rt) + "".join(dirs) + arr_fname[num+1]+arr_fobj[num + 1])
-                x1, y1 = img1.size
-                x2, y2 = img2.size
-                newimage = Image.new('RGBA', (x1, (y1 + y2))) # 新建拼接的图片
-                if y1 < y2:
-                    # 图片拼接并保存
-                    newimage.paste(img2, (0, 0))
-                    newimage.paste(img1, (0, y2))
-                    newimage.save("".join(rt) + "".join(dirs) + arr_fname[num] + arr_fobj[num])
-                else:
-                    newimage.paste(img1, (0, 0))
-                    newimage.paste(img2, (0, y1))
-                    newimage.save("".join(rt) + "".join(dirs) + arr_fname[num] + arr_fobj[num])
-
-
-
-
-
-
-        # 不需要图片转换
-        # outfile = fname + ".jpg"
-        # if f != outfile:
-        #     try:
-        #         Image.open("".join(rt)+"".join(dirs)+f).save("".join(rt)+"".join(dirs)+outfile)
-        #
-        #     except IOError:
-        #         print("cannot convert",f)
-        # img = Image.open("".join(rt) + "".join(dirs) + f)
-        # #直接转换之后图片像素变低
-        # img = img.convert('L')
-        # img = np.array(img)
-        # rows, cols = img.shape
-        # for x in range(rows):
-        #     for y in range(cols):
-        #         if img[x, y] <= 128:
-        #             img[x, y] = 0
-        #         else:
-        #             img[x, y] = 1
-        # img.save("".join(rt) + "".join(dirs) + f)
-
-
-#        new = fname[0] + 'b' + fname[1]
-#        os.rename(os.path.join(rt,f),os.path.join(rt,new))
+    for dir in  dirs:   # 获取目录下的字目录
+        # 获取字目录中的文件file[2]是文件名。file[1]是二级目录，file[0]是一级目录
+        # for file in os.walk(os.path.join(root, dir)):
+        childdir = "".join(rt) + "".join(dir)
+        for file in os.listdir(childdir):
+            # print("".join(file[2]))
+            # 获取目录中文件的name和格式
+            fname, fobj = os.path.splitext(file)
+            # 如果是图片格式记录文件名和属性
+            if fobj in ['.jpg', '.png']:
+                arr_fname.append(fname)
+                # 如果文件名是'.png'另存为'.jpg'
+                if fobj in ['.jpg']:
+                    img = Image.open("".join(rt) + "".join(dir) + "\\" + file)
+                    img.save("".join(rt) + "".join(dir) + "\\" + fname + "".join('.png'))
+        # 判断文件拼接的顺序(依据文件名的长度)
+        arr_fname.sort()
+        # 获取列表的长度
+        num = len(arr_fname)
+        if num == 1:
+            img = Image.open("".join(rt) + "".join(dir) + "\\" + arr_fname[0] + '.png')
+            x1, y1 = img.size
+            box = (0, 210, x1, (y1 - 150))
+            newimage = img.crop(box)
+            newimage = newimage.convert('L')
+            x, y = newimage.size  # 获取图片的尺寸
+            for i in range(0, int(y / (4 * x / 3))):  # 求图片的整数倍
+                box = (0, i * (4 * x / 3), x, (i + 1) * (4 * x / 3))  # 计算截图的大小
+                new = newimage.crop(box).resize((758, 1024), Image.ANTIALIAS)  # 截图并且转换为制定的分辨率
+                new.save("".join(rt) + "".join('image') + "\\" + arr_fname[0] + str(i) + '.png')
+        elif num == 2:
+            img1 = Image.open("".join(rt) + "".join(dir) + "\\" + arr_fname[0] + '.png')
+            img2 = Image.open("".join(rt) + "".join(dir) + "\\" + arr_fname[1] + '.png')
+            x1, y1 = img1.size
+            x2, y2 = img2.size
+            box1 = (0, 210, x1, (y1 - 150))
+            box2 = (0, 210, x2, (y2 - 150))
+            newimage1 = img1.crop(box1)
+            newimage2 = img2.crop(box2)
+            newimage = Image.new('RGBA', (x1, (y1 + y2 - 720))) # 新建拼接的图片
+            newimage.paste(newimage1, (0, 0))
+            newimage.paste(newimage2, (0, y1 - 360))
+            newimage = newimage.convert('L')
+            x, y = newimage.size  # 获取图片的尺寸
+            for i in range(0, int(y / (4 * x / 3))):  # 求图片的整数倍
+                box = (0, i * (4 * x / 3), x, (i + 1) * (4 * x / 3))  # 计算截图的大小
+                new = newimage.crop(box).resize((758, 1024), Image.ANTIALIAS)  # 截图并且转换为制定的分辨率
+                new.save("".join(rt) + "".join('image') + "\\" + arr_fname[0] + str(i) + '.png')
+        elif num == 3:
+            img1 = Image.open("".join(rt) + "".join(dir) + "\\" + arr_fname[0] + '.png')
+            img2 = Image.open("".join(rt) + "".join(dir) + "\\" + arr_fname[1] + '.png')
+            img3 = Image.open("".join(rt) + "".join(dir) + "\\" + arr_fname[2] + '.png')
+            x1, y1 = img1.size
+            x2, y2 = img2.size
+            x3, y3 = img3.size
+            box1 = (0, 210, x1, (y1 - 150))
+            box2 = (0, 210, x2, (y2 - 150))
+            box3 = (0, 210, x3, (y3 - 150))
+            newimage1 = img1.crop(box1)
+            newimage2 = img2.crop(box2)
+            newimage3 = img3.crop(box3)
+            newimage = Image.new('RGBA', (x1, (y1 + y2 + y3 - 1080)))  # 新建拼接的图片
+            newimage.paste(newimage1, (0, 0))
+            newimage.paste(newimage2, (0, y1 - 360))
+            newimage.paste(newimage3, (0, y2 - 720))
+            newimage = newimage.convert('L')
+            newimage.save("".join(rt) + "".join('image') + "\\" + arr_fname[0] + '.png')
+        else:
+            print("error")
+        arr_fname = []
