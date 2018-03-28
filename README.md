@@ -8,4 +8,4 @@
 
 3.[alien_invasion](alien_invasion/)
 
-4.[data_visualization](data_visualzation/)
+4.[data_visualization](data_visualization/)
