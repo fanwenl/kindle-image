@@ -4,4 +4,8 @@
 
 1.[kindle_image](kindle_image/)
 
-2.[pythonhex2float](pythonhex2float)
+2.[pythonhex2float](pythonhex2float/)
+
+3.[alien_invasion](alien_invasion/)
+
+4.[data_visualization](data_visualzation/)
