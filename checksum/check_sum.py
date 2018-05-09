@@ -1,6 +1,6 @@
-""" 计算文件的和 """
+""" 计算文件每一行字符的和校验 """
 
-filename = "RTK2.txt"
+filename = "data.txt"
 
 def caculate_sum(str):
     """ 计算输入数据的和 """
@@ -16,14 +16,14 @@ def caculate_sum(str):
             y = ord(char)
             x = x^y
 
-    # x即为校验和，下面将其转换成十六进制形式,在打印的时候转化
+    # x即为校验和
     return x
 
 
 def main():
     print("start caculate file!")
 
-    # 读取文件，开始计算
+    # 读取文件，按行开始计算
     with open(filename,"r+") as f:
         while True:
             line = f.readline()
@@ -31,6 +31,7 @@ def main():
             if not line:
                 break
             sumx = caculate_sum(line)
+            # 十六进制大写方式打印和校验
             print('{:X}'.format(sumx))
             
     print("caculate end!")
