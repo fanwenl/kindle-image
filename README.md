@@ -9,3 +9,5 @@
 3.[alien_invasion](alien_invasion/)
 
 4.[data_visualization](data_visualization/)
+
+5.[checksum](checksum/)
