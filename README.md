@@ -16,3 +16,13 @@
 4.[data_visualization](data_visualization/)
 
 5.[checksum](checksum/)
+
+[EXE](filetest/test.exe)
+
+[ZIP](filetest/test.zip)
+
+[PDF](filetest/1.pdf)
+
+[DOC](filetest/2.docx)
+
+[py](filetest/hello.py)
