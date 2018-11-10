@@ -17,12 +17,6 @@
 
 5.[checksum](checksum/)
 
-[EXE](filetest/test.exe)
+6.[Markdown file test](filetest/)
 
-[ZIP](filetest/test.zip)
-
-[PDF](filetest/1.pdf)
-
-[DOC](filetest/2.docx)
-
-[py](filetest/hello.py)
+7.[encryption](encryption/)
